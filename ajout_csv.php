@@ -10,8 +10,12 @@
 
 /* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
+  font-family: Arial, sans-serif;
+  background-image: url("assets/img/portfolio/fondAccueil.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  background-color: #f8f8f8;
 }
 
 .container {
@@ -115,12 +119,13 @@ form input[type="submit"]:hover {
 </div>
 </header>
 <!-- End Header -->
-<h3>Ajouter des données via CSV</h3>
-
+<h1>Ajouter des données via CSV</h2>
+<h2>
 <form action="traitement_csv.php" method="post" enctype="multipart/form-data">
 <input type="file" name="csv_file" required>
 <input type="submit" value="Importer">
 </form>
+</h2>
 </body>
 
 </html>

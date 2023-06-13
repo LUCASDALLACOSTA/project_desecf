@@ -18,11 +18,7 @@
 /* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    background-image: url("assets/img/portfolio/fondAccueil.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: top;
-    background-color: #f8f8f8;
+    overflow: hidden;
 }
 
 .container {
@@ -102,7 +98,7 @@ h2 {
 <!-- End Header -->
 
 
-<div id="map" style="height: 700px"></div>
+<div id="map" style="height: 500px"></div>
 
 <?php
 

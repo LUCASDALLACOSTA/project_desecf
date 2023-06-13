@@ -29,8 +29,12 @@ if (isset($_GET['error']) && !empty($_GET['error']) && !isset($_SESSION['Type_us
 
 /* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
+  font-family: Arial, sans-serif;
+  background-image: url("assets/img/portfolio/fondAccueil.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  background-color: #f8f8f8;
 }
 
 .container {
