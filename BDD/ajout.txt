@@ -1,0 +1,8 @@
+- Rajouter ID_Groupe dans la table Cours lier à la table groupes
+- Rajouter dans eleves ID_Groupe lier à la table groupes
+- Enlever ID_Feuille dans cours
+- Ajout Date (type Date) dans cours
+- Enlever dans Feuille le foreign key sur ID_Classe
+- Ajout de la table journaux_feuille avec ID_Eleve,ID_Feuille, Signature_eleve NULL,Signature_enseignant NULL
+- Ajout d'une table administrateur qui peux ajouter des enseignants,classes,groupes
+- Ajouter Premiere_connexion int(1) dans la table eleves et professeurs et administrateur
