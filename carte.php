@@ -248,10 +248,13 @@
             // Création du marqueur avec les coordonnées de l'adresse
             var marker = L.marker([latitude, longitude]).addTo(map);
 
+            var listeArretsProches = "liste_arrets_proches.php?latitude=" + latitude + "&longitude=" + longitude;
+
             // Création du contenu de la pop-up avec les informations des professionnels
             var popupContent = "<h3>Nom de la structure : " + nom_structure + "</h3>";
             popupContent += "<h3>Adresse : " + adresse + "</h3>";
             popupContent += "<h3>Type de la structure : " + type_structure + "</h3>";
+            popupContent += "<h3><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h3>";
             popupContent += "<ul>";
 
             // Ajoutez les informations de chaque professionnel
