@@ -26,7 +26,7 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === UPLOAD_ERR_OK
         $ville = $row['Ville'];
         $indicatif = $row['Indicatif'];
         $telephone = $row['Tél. (SMS)'];
-        $email = $row['Adresse E-mail'];
+        $mail = $row['Adresse E-mail'];
 
         // Construire l'adresse avec le code postal et la ville
         $adresseComplete = $adresse1 . ', ' . $codePostal . ' ' . $ville;
