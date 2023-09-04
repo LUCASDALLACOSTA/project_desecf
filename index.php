@@ -26,7 +26,7 @@ include 'includes/connexion_bdd.php'; //connexion bdd
 /* Global Styles */
 body {
   font-family: Arial, sans-serif;
-  background-image: url("assets/img/portfolio/fondAccueil.png");
+  background-image: url("assets/img/fondAccueil.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
@@ -91,13 +91,13 @@ h2 {
 <!-- ======= Header ======= -->
 <header id="header" class="fixed-top">
 <div class="container d-flex align-items-center">
-<img src="assets/img/portfolio/logo.png" alt="Logo" class="logo">
-<ul>
-<li><a href="./"></span>&nbsp;Accueil</a></li>
-<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
-<li><a href="carte.php">&nbsp;Carte</a></li>
-<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
-</ul>
+  <img src="assets/img/logo.png" alt="Logo" class="logo">
+  <ul>
+    <li><a href="./"></span>&nbsp;Accueil</a></li>
+    <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
+    <li><a href="carte.php">&nbsp;Carte</a></li>
+    <li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
+  </ul>
 </div>
 </header>
 
