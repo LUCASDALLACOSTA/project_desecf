@@ -368,3 +368,82 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
 }
 
 ?>
+
+<!-- LIGNE LIO -->
+
+<?php
+// Vérifiez si les paramètres de latitude et de longitude sont présents dans l'URL
+if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
+    // Récupérez les valeurs de latitude et de longitude depuis l'URL
+    $latitude = floatval($_GET['latitude']);
+    $longitude = floatval($_GET['longitude']);
+
+    // Chemin vers le fichier GeoJSON des stations LIO
+    $geojson_file_stations = 'includes/transport/arrets_lio.geojson';
+
+    // Chargez le contenu du fichier GeoJSON des stations LIO
+    $geojson_stations = file_get_contents($geojson_file_stations);
+
+    if ($geojson_stations !== false) {
+        // Convertir le GeoJSON en tableau PHP
+        $data_stations = json_decode($geojson_stations, true);
+
+        // Tableau associatif pour stocker les informations sur les stations proches par nom
+        $stations_proches = array();
+
+        // Nombre de stations à afficher (par exemple, 2 stations les plus proches)
+        $nombre_de_stations = 2;
+
+        // Parcourez les stations LIO et calculez les distances
+        foreach ($data_stations['features'] as $feature) {
+            $lon_station = $feature['geometry']['coordinates'][0];
+            $lat_station = $feature['geometry']['coordinates'][1];
+            $distance_station = calculerDistance($latitude, $longitude, $lat_station, $lon_station);
+
+            // Nom de la station
+            $nom_station = $feature['properties']['stop_name'];
+
+            // Si la station n'existe pas déjà dans le tableau, ajoutez-la
+            if (!isset($stations_proches[$nom_station])) {
+                $stations_proches[$nom_station] = array(
+                    'nom' => $nom_station,
+                    'departement' => $feature['properties']['nom_departement'],
+                    'distance' => $distance_station
+                );
+            } else {
+                // Si la station existe déjà dans le tableau, mettez à jour la distance si elle est plus proche
+                if ($distance_station < $stations_proches[$nom_station]['distance']) {
+                    $stations_proches[$nom_station]['distance'] = $distance_station;
+                }
+            }
+        }
+
+        // Triez le tableau des stations proches par distance croissante
+        usort($stations_proches, function ($a, $b) {
+            return $a['distance'] - $b['distance'];
+        });
+
+        // Affichez les stations LIO les plus proches
+        echo '<h1>Les stations LIO les plus proches :</h1>';
+        if (count($stations_proches) >= $nombre_de_stations) {
+            echo '<table border=1>';
+            echo '<tr><th>Nom de la station</th><th>Département</th><th>Distance (mètres)</th></tr>';
+            for ($i = 0; $i < $nombre_de_stations; $i++) {
+                echo '<tr>';
+                echo '<td>' . $stations_proches[$i]['nom'] . '</td>';
+                echo '<td>' . $stations_proches[$i]['departement'] . '</td>';
+                echo '<td>' . round($stations_proches[$i]['distance'], 0) . '</td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+        } else {
+            echo 'Il n\'y a pas suffisamment de stations LIO';
+        }
+    } else {
+        echo 'Erreur lors de la lecture du fichier GeoJSON des stations LIO.';
+    }
+} else {
+    echo 'Les paramètres de latitude et de longitude sont manquants dans l\'URL.';
+}
+?>
+    

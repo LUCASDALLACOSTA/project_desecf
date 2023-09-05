@@ -105,6 +105,11 @@
         color: red;
     }
 
+    .scrollable-content {
+    max-height: 900px;
+    overflow-y: auto;
+}
+
 </style>
 
 <?php
@@ -187,6 +192,7 @@ $conn->close();
     </header>
 </head>
 <body>
+<div class="scrollable-content">
     <h1>Ajouter un professionnel</h1>
 
     <?php if ($ajoutSuccess): ?>
@@ -232,5 +238,6 @@ $conn->close();
 
         <input type="submit" value="Ajouter">
     </form>
+    </div>
 </body>
 </html>

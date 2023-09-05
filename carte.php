@@ -73,6 +73,14 @@
             height: auto;
             margin-right: 10px;
         }
+
+        .footer-banner {
+            max-height: 100px; /* Hauteur maximale */
+            text-align: center; /* Centrer le texte */
+            width: 100%; /* Largeur de 100% pour s'adapter à la largeur de l'écran */
+            background-color: #f8f8f8; /* Couleur de fond */
+            padding: 10px 0; /* Espacement interne */
+        }
     </style>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
@@ -99,7 +107,7 @@
     <!-- End Header -->
 
 
-    <div id="map" style="height: 700px"></div>
+    <div id="map" style="height: 840px"></div>
 
     <?php
 
@@ -118,7 +126,7 @@
 
     ?>
     <script>
-        var map = L.map('map').setView([43.5937766, 1.4710826], 14); //point où on se situe 
+        var map = L.map('map').setView([43.5937766, 1.4710826], 14);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { //affichage de la map
             maxZoom: 19,
@@ -312,8 +320,10 @@
         var layerControl = L.control.layers(null, overlayMaps).addTo(map);
     </script>
 
-    <h2 style="background-color: white;">PROJET DESECF</h2>
-    <h3 style="text-align: center;">BLUZAT Clément - CLAVERIE Enzo - Lucas Dallas Costa</h3>
+   <div class="footer-banner">
+        <h2 style="margin: 0;">PROJET DESECF</h2>
+        <h3 style="text-align: center;">BLUZAT Clément - CLAVERIE Enzo - Lucas Dallas Costa</h3>
+    </div>
 </body>
 
 </html>
