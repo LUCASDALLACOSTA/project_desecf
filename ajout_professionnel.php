@@ -135,8 +135,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Vérifie si le formulaire a été
     $telephone = $_POST['telephone'];
     $mail = $_POST['mail'];
     $statut = $_POST['statut'];
+    $statut_stage_2 = $_POST['statut_stage_2'];
     $duree_stage = $_POST['duree_stage'];
+    $duree_stage_2 = $_POST['duree_stage_2'];
     $date_debut_stage = $_POST['date_debut_stage'];
+    $date_debut_stage_2 = $_POST['date_debut_stage_2'];
     $nom_structure = $_POST['nom_structure'];
     $type_structure = $_POST['type_structure'];
 
@@ -157,7 +160,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Vérifie si le formulaire a été
         $longitude = $geocodeData[0]['lon'];
 
         // Insérer les données dans la base de données
-        $sql = "INSERT INTO professionnel (nom, prenom, adresse, latitude, longitude, telephone, mail, statut, duree_stage, date_debut_stage, nom_structure, type_structure) VALUES ('$nom', '$prenom', '$adresse', '$latitude', '$longitude', '$telephone', '$mail', '$statut', '$duree_stage', '$date_debut_stage', '$nom_structure', '$type_structure')";
+        $sql = "INSERT INTO professionnel (nom, prenom, adresse, latitude, longitude, telephone, mail, statut, duree_stage, date_debut_stage, nom_structure, type_structure, statut_stage_2, duree_stage_2, date_debut_stage_2) 
+        VALUES ('$nom', '$prenom', '$adresse', '$latitude', '$longitude', '$telephone', '$mail', '$statut', '$duree_stage', '$date_debut_stage', '$nom_structure', '$type_structure', '$statut_stage_2', '$duree_stage_2', '$date_debut_stage_2')";
 
         if ($conn->query($sql) === TRUE) {
             $ajoutSuccess = true;
@@ -201,43 +205,60 @@ $conn->close();
         </div>
     <?php endif; ?>
 
-    <form method="post" action="ajout_professionnel.php">
-        <label for="nom">Nom :</label>
-        <input type="text" name="nom" required><br>
+    <form method="POST" action="">
+            <label for="nom_structure">Nom de la structure :</label>
+            <input type="text" name="nom_structure" required><br>
 
-        <label for="prenom">Prénom :</label>
-        <input type="text" name="prenom" required><br>
+            <label for="type_structure">Type de structure :</label>
+            <input type="text" name="type_structure"><br>
 
-        <label for="adresse">Adresse :</label>
-        <input type="text" name="adresse" required><br>
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" required><br>
 
-        <label for="telephone">Téléphone :</label>
-        <input type="text" name="telephone" required><br>
+            <label for="prenom">Prénom :</label>
+            <input type="text" name="prenom" required><br>
 
-        <label for="mail">Email :</label>
-        <input type="email" name="mail" required><br>
+            <label for="adresse">Adresse :</label>
+            <input type="text" name="adresse" required><br>
 
-        <label for="statut">Statut :</label>
-        <select name="statut" required>
-            <option value="disponible">Disponible</option>
-            <option value="non disponible">Non disponible</option>
-            <option value="en attente">En attente</option>
-        </select><br>
+            <label for="telephone">Téléphone :</label>
+            <input type="text" name="telephone" required><br>
 
-        <label for="duree_stage">Durée du stage :</label>
-        <input type="text" name="duree_stage"><br>
+            <label for="mail">Mail :</label>
+            <input type="email" name="mail" required><br>
 
-        <label for="date_debut_stage">Date de début du stage :</label>
-        <input type="date" name="date_debut_stage"><br>
+            <h2 style="text-align:center;"> Premier stage: </h2>
 
-        <label for="nom_structure">Nom de la structure :</label>
-        <input type="text" name="nom_structure" required><br>
+            <label for="statut">Statut:</label>
+            <select name="statut" required>
+                <option value="disponible">Disponible</option>
+                <option value="non disponible">Non disponible</option>
+                <option value="en attente">En attente</option>
+            </select><br>
 
-        <label for="type_structure">Type de structure :</label>
-        <input type="text" name="type_structure"><br>
+            <label for="duree_stage">Durée du stage:</label>
+            <input type="text" name="duree_stage" required><br>
 
-        <input type="submit" value="Ajouter">
-    </form>
+            <label for="date_debut_stage">Date de début du stage:</label>
+            <input type="date" name="date_debut_stage" required><br>
+
+            <h2 style="text-align:center;"> Deuxième stage: </h2>
+
+            <label for="statut_stage_2">Statut:</label>
+            <select name="statut_stage_2" required>
+                <option value="disponible">Disponible</option>
+                <option value="non disponible">Non disponible</option>
+                <option value="en attente">En attente</option>
+            </select><br>
+
+            <label for="duree_stage_2">Durée du deuxième stage:</label>
+            <input type="text" name="duree_stage_2"><br>
+
+            <label for="date_debut_stage_2">Date de début du deuxième stage:</label>
+            <input type="date" name="date_debut_stage_2"><br>
+
+            <input type="submit" value="Créer professionnel avec deux stages">
+        </form>
     </div>
 </body>
 </html>

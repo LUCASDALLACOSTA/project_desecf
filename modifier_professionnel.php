@@ -105,6 +105,10 @@
         color: red;
     }
 
+    .scrollable-content {
+    max-height: 900px;
+    overflow-y: auto;
+}
 </style>
 
 <?php
@@ -135,15 +139,39 @@ $updateSuccess = false;
 
 // Traitement du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupération des données du formulaire
-    $nom = $_POST["nom"];
-    $prenom = $_POST["prenom"];
-    $adresse = $_POST["adresse"];
-    $telephone = $_POST["telephone"];
-    $mail = $_POST["mail"];
-    $statut = $_POST["statut"];
-    $duree_stage = $_POST["duree_stage"];
-    $date_debut_stage = $_POST["date_debut_stage"];
+    $nom = mysqli_real_escape_string($conn, $_POST["nom"]);
+    $prenom = mysqli_real_escape_string($conn, $_POST["prenom"]);
+    $adresse = mysqli_real_escape_string($conn, $_POST["adresse"]);
+    $telephone = mysqli_real_escape_string($conn, $_POST["telephone"]);
+    $mail = mysqli_real_escape_string($conn, $_POST["mail"]);
+    $statut = mysqli_real_escape_string($conn, $_POST["statut"]);
+    $duree_stage = mysqli_real_escape_string($conn, $_POST["duree_stage"]);
+    $date_debut_stage = mysqli_real_escape_string($conn, $_POST["date_debut_stage"]);
+    $nom_structure = mysqli_real_escape_string($conn, $_POST["nom_structure"]);
+    $type_structure = mysqli_real_escape_string($conn, $_POST["type_structure"]);
+    $statut_stage_2 = mysqli_real_escape_string($conn, $_POST["statut_stage_2"]);
+    $duree_stage_2 = mysqli_real_escape_string($conn, $_POST["duree_stage_2"]);
+    $date_debut_stage_2 = mysqli_real_escape_string($conn, $_POST["date_debut_stage_2"]);
+
+// Mise à jour des informations du professionnel dans la base de données
+$sql = "UPDATE professionnel 
+        SET 
+            nom='$nom', 
+            prenom='$prenom', 
+            adresse='$adresse', 
+            telephone='$telephone', 
+            mail='$mail', 
+            statut='$statut', 
+            duree_stage='$duree_stage', 
+            date_debut_stage='$date_debut_stage', 
+            nom_structure='$nom_structure', 
+            type_structure='$type_structure',
+            statut_stage_2='$statut_stage_2', 
+            duree_stage_2='$duree_stage_2', 
+            date_debut_stage_2='$date_debut_stage_2'
+        WHERE 
+            id_professionnel=$professionnel_id";
+
 
     // Géocodage de l'adresse pour obtenir les coordonnées de latitude et longitude
     $addressEncoded = urlencode($adresse);
@@ -161,9 +189,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $latitude = $geocodeData[0]['lat'];
         $longitude = $geocodeData[0]['lon'];
         // Mise à jour des informations du professionnel dans la base de données
-        $sql = "UPDATE professionnel SET nom='$nom', prenom='$prenom', adresse='$adresse', telephone='$telephone', mail='$mail', statut='$statut', duree_stage='$duree_stage', date_debut_stage='$date_debut_stage', latitude='$latitude', longitude='$longitude' WHERE id_professionnel=$professionnel_id";
+        $sql = "UPDATE professionnel 
+        SET 
+            nom='$nom', 
+            prenom='$prenom', 
+            adresse='$adresse', 
+            telephone='$telephone', 
+            mail='$mail', 
+            statut='$statut', 
+            duree_stage='$duree_stage', 
+            date_debut_stage='$date_debut_stage', 
+            nom_structure='$nom_structure', 
+            type_structure='$type_structure',
+            statut_stage_2='$statut_stage_2', 
+            duree_stage_2='$duree_stage_2', 
+            date_debut_stage_2='$date_debut_stage_2'
+        WHERE 
+            id_professionnel=$professionnel_id";
 
-        // Exécutez la requête SQL et définissez $updateSuccess en conséquence
         if ($conn->query($sql) === TRUE) {
             $updateSuccess = true;
         } else {
@@ -194,6 +237,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+<div class="scrollable-content">
     <h1>Formulaire de modification du professionnel</h1>
     
     <!-- Affichez le message de succès ou d'erreur ici -->
@@ -204,36 +248,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endif; ?>
     
     <form method="POST" action="">
-        <label for="nom">Nom :</label>
-        <input type="text" name="nom" value="<?php echo $professionnel['nom']; ?>" required><br>
 
-        <label for="prenom">Prénom :</label>
-        <input type="text" name="prenom" value="<?php echo $professionnel['prenom']; ?>" required><br>
+    <label for="nom_structure">Nom de la structure :</label>
+    <input type="text" name="nom_structure" value="<?php echo $professionnel['nom_structure']; ?>" required><br>
 
-        <label for="adresse">Adresse :</label>
-        <input type="text" name="adresse" value="<?php echo $professionnel['adresse']; ?>" required><br>
+    <label for="type_structure">Type de structure :</label>
+    <input type="text" name="type_structure" value="<?php echo $professionnel['type_structure']; ?>"><br>
 
-        <label for="telephone">Téléphone :</label>
-        <input type="text" name="telephone" value="<?php echo $professionnel['telephone']; ?>" required><br>
+    <label for="nom">Nom :</label>
+    <input type="text" name="nom" value="<?php echo $professionnel['nom']; ?>" required><br>
 
-        <label for="mail">Mail :</label>
-        <input type="email" name="mail" value="<?php echo $professionnel['mail']; ?>" required><br>
+    <label for="prenom">Prénom :</label>
+    <input type="text" name="prenom" value="<?php echo $professionnel['prenom']; ?>" required><br>
 
-        <label for="statut">Statut :</label>
-        <select name="statut" required>
-            <option value="disponible" <?php if ($professionnel['statut'] == "disponible") echo "selected"; ?>>Disponible</option>
-            <option value="non disponible" <?php if ($professionnel['statut'] == "non disponible") echo "selected"; ?>>Non disponible</option>
-            <option value="en attente" <?php if ($professionnel['statut'] == "en attente") echo "selected"; ?>>En attente</option>
-        </select><br>
+    <label for="adresse">Adresse :</label>
+    <input type="text" name="adresse" value="<?php echo $professionnel['adresse']; ?>" required><br>
 
-        <label for="duree_stage">Durée du stage :</label>
-        <input type="text" name="duree_stage" value="<?php echo $professionnel['duree_stage']; ?>" required><br>
+    <label for="telephone">Téléphone :</label>
+    <input type="text" name="telephone" value="<?php echo $professionnel['telephone']; ?>" required><br>
 
-        <label for="date_debut_stage">Date de début du stage :</label>
-        <input type="date" name="date_debut_stage" value="<?php echo $professionnel['date_debut_stage']; ?>" required><br>
+    <label for="mail">Mail :</label>
+    <input type="email" name="mail" value="<?php echo $professionnel['mail']; ?>" required><br>
 
-        <input type="submit" value="Enregistrer">
-    </form>
+    <h2 style="text-align:center;"> Premier stage: </h2>
+
+    <label for="statut">Statut:</label>
+    <select name="statut" required>
+        <option value="disponible" <?php if ($professionnel['statut'] == "disponible") echo "selected"; ?>>Disponible</option>
+        <option value="non disponible" <?php if ($professionnel['statut'] == "non disponible") echo "selected"; ?>>Non disponible</option>
+        <option value="en attente" <?php if ($professionnel['statut'] == "en attente") echo "selected"; ?>>En attente</option>
+    </select><br>
+
+    <label for="duree_stage">Durée du stage:</label>
+    <input type="text" name="duree_stage" value="<?php echo $professionnel['duree_stage']; ?>" required><br>
+
+    <label for="date_debut_stage">Date de début du stage:</label>
+    <input type="date" name="date_debut_stage" value="<?php echo $professionnel['date_debut_stage']; ?>" required><br>
+
+    <h2 style="text-align:center;"> Deuxième stage: </h2>
+
+    <label for="statut_stage_2">Statut:</label>
+    <select name="statut_stage_2" required>
+        <option value="disponible" <?php if ($professionnel['statut_stage_2'] == "disponible") echo "selected"; ?>>Disponible</option>
+        <option value="non disponible" <?php if ($professionnel['statut_stage_2'] == "non disponible") echo "selected"; ?>>Non disponible</option>
+        <option value="en attente" <?php if ($professionnel['statut_stage_2'] == "en attente") echo "selected"; ?>>En attente</option>
+    </select><br>
+
+    <label for="duree_stage_2">Durée du stage:</label>
+    <input type="text" name="duree_stage_2" value="<?php echo $professionnel['duree_stage_2']; ?>"><br>
+
+    <label for="date_debut_stage_2">Date de début du stage:</label>
+    <input type="date" name="date_debut_stage_2" value="<?php echo $professionnel['date_debut_stage_2']; ?>"><br>
+
+    <input type="submit" value="Enregistrer">
+</form>
+</div>
 </body>
 
 </html>

@@ -168,6 +168,8 @@
         var tous = L.layerGroup();
         var disponible = L.layerGroup();
         var nondisponible = L.layerGroup();
+        var dispo1er = L.layerGroup();
+        var dispo2eme = L.layerGroup();
         var enattente = L.layerGroup();
 
         // Changer la couleur de la balise du marqueur en fonction du statut
@@ -186,6 +188,22 @@
             popupAnchor: [1, -34],
             shadowSize: [41, 41]
         });
+
+        var disponible1erIcon = L.icon({
+            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        })
+
+        var disponible2emeIcon = L.icon({
+            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        })
 
         var enAttenteIcon = L.icon({
             iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
@@ -208,9 +226,13 @@
             var statut = "<?php echo $professionnel['statut']; ?>";
             var dureeStage = "<?php echo $professionnel['duree_stage']; ?>";
             var dateDebutStage = "<?php echo $professionnel['date_debut_stage']; ?>";
+            var statut_stage_2 = "<?php echo $professionnel['statut_stage_2']; ?>";
+            var duree_stage_2 = "<?php echo $professionnel['duree_stage_2']; ?>";
+            var date_debut_stage_2 = "<?php echo $professionnel['date_debut_stage_2']; ?>";
             var type_structure = "<?php echo $professionnel['type_structure']; ?>";
             var nom_structure = "<?php echo $professionnel['nom_structure']; ?>";
             var id = "<?php echo $professionnel['id_professionnel']; ?>";
+            
 
             // Créez une clé unique pour chaque adresse
             var adresseKey = latitude + "_" + longitude + "_" + adresse;
@@ -235,14 +257,16 @@
                 telephone: telephone,
                 mail: mail,
                 statut: statut,
+                statut_stage_2: statut_stage_2,
                 dureeStage: dureeStage,
+                duree_stage_2: duree_stage_2,
                 dateDebutStage: dateDebutStage,
+                date_debut_stage_2: date_debut_stage_2,
                 type_structure: type_structure,
                 nom_structure: nom_structure,
                 id: id
             });
 
-        
         // Boucle pour créer les marqueurs et les pop-ups regroupées
         for (var adresseKey in professionnelsParAdresse) {
             var info = professionnelsParAdresse[adresseKey];
@@ -259,9 +283,9 @@
             var listeArretsProches = "liste_arrets_proches.php?latitude=" + latitude + "&longitude=" + longitude;
 
             // Création du contenu de la pop-up avec les informations des professionnels
-            var popupContent = "<h3>Nom de la structure : " + nom_structure + "</h3>";
-            popupContent += "<h3>Adresse : " + adresse + "</h3>";
-            popupContent += "<h3>Type de la structure : " + type_structure + "</h3>";
+            var popupContent = "<h3>Nom de la structure : </h3>" + nom_structure + "";
+            popupContent += "<h3>Adresse : </h3>" + adresse + "";
+            popupContent += "<h3>Type de la structure : </h3>" + type_structure + "";
             popupContent += "<h3><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h3>";
             popupContent += "<ul>";
 
@@ -269,23 +293,46 @@
             for (var i = 0; i < professionnels.length; i++) {
                 var professionnel = professionnels[i];
                 var statut = professionnel.statut;
+                var statut_stage_2 = professionnel.statut_stage_2;
+                var dureeStage = professionnel.dureeStage;
+                var duree_stage_2 = professionnel.duree_stage_2;
+                var dateDebutStage = professionnel.dateDebutStage;
+                var date_debut_stage_2 = professionnel.date_debut_stage_2;
+
                 popupContent += "<h3 style='text-align:center;'>Professionnel n° : " + (i + 1) + "</h3>";
                 popupContent += "<li><strong>Nom :</strong> " + professionnel.nom + "</li>";
                 popupContent += "<li><strong>Prénom :</strong> " + professionnel.prenom + "</li>";
                 popupContent += "<li><strong>Téléphone :</strong> " + professionnel.telephone + "</li>";
                 popupContent += "<li><strong>E-mail :</strong> " + professionnel.mail + "</li>";
-                popupContent += "<li><strong>Statut :</strong> " + professionnel.statut + "</li>";
-                popupContent += "<li><strong>Durée de stage :</strong> " + professionnel.dureeStage + "</li>";
-                popupContent += "<li><strong>Date de début du stage :</strong> " + professionnel.dateDebutStage + "</li>";
+                popupContent += "<h4 style='text-align:center;'>Premier Stage</h4>";
+                popupContent += "<li><strong>Statut:</strong> " + statut + "</li>";
+                popupContent += "<li><strong>Durée de stage:</strong> " + dureeStage + "</li>";
+                popupContent += "<li><strong>Date de début du stage:</strong> " + dateDebutStage + "</li>";
+                popupContent += "<h4 style='text-align:center;'>Deuxième Stage</h4>";
+                popupContent += "<li><strong>Statut:</strong> " + statut_stage_2 + "</li>";
+                popupContent += "<li><strong>Durée de stage:</strong> " + duree_stage_2 + "</li>";
+                popupContent += "<li><strong>Date de début du stage:</strong> " + date_debut_stage_2 + "</li>";
                 popupContent += "<li><a href='modifier_professionnel.php?id=" + professionnel.id + "'>Modifier</a></li>";
 
                 // Ajoutez le marqueur à la couche correspondante en fonction du statut
-                if (statut === 'disponible') {
+                if (statut === 'disponible' && statut_stage_2 === 'disponible') {
                     marker.setIcon(disponibleIcon);
-                } else if (statut === 'non disponible') {
+                    marker.addTo(disponible);
+                } else if (statut === 'non disponible' && statut_stage_2 === 'non disponible') {
                     marker.setIcon(nonDisponibleIcon);
-                } else {
+                    marker.addTo(nondisponible);
+                } else if (statut === 'non disponible' && statut_stage_2 === 'disponible')
+                {
+                    marker.setIcon(disponible2emeIcon);
+                    marker.addTo(dispo2eme);
+                } else if (statut === 'disponible' && statut_stage_2 === 'non disponible')
+                {
+                    marker.setIcon(disponible1erIcon);
+                    marker.addTo(dispo1er);
+                } else
+                {
                     marker.setIcon(enAttenteIcon);
+                    marker.addTo(enattente);
                 }
             }
 
@@ -293,27 +340,18 @@
 
             // Ajout de la pop-up au marqueur
             marker.bindPopup(popupContent);
-            // Ajout du marqueur à la couche correspondante en fonction du statut
-            if (statut === 'disponible') {
-                marker.addTo(disponible);
-                marker.setIcon(disponibleIcon);
-            } else if (statut === 'non disponible') {
-                marker.addTo(nondisponible);
-                marker.setIcon(nonDisponibleIcon);
-            } else {
-                marker.addTo(enattente);
-                marker.setIcon(enAttenteIcon);
-            }
-
             // Ajout du marqueur à la couche "tous"
             marker.addTo(tous);
         }
+
         <?php }?>
 
         var overlayMaps = {
             "Tous": tous,
             "Disponible": disponible,
             "Non disponible": nondisponible,
+            "1er stage disponible": dispo1er,
+            "2eme stage disponible": dispo2eme,
             "En attente": enattente
         };
 
