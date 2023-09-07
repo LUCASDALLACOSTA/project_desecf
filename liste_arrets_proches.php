@@ -301,10 +301,9 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
 <!-- GARE !-->
 
 
-
 <?php
 
-$geojson_file_gares = 'includes/transport/gare_sncf_haute_garonne.geojson';
+$geojson_file_gares = 'includes/transport/gare_sncf.geojson'; // Mettez à jour le nom du fichier GeoJSON
 
 // Vérifiez si les paramètres de latitude et de longitude sont présents dans l'URL
 if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
@@ -312,7 +311,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
     $latitude = floatval($_GET['latitude']);
     $longitude = floatval($_GET['longitude']);
 
-    // Chargez le contenu du fichier GeoJSON des gares SNCF
+    // Chargez le contenu du fichier GeoJSON des gares SNCF en Occitanie
     $geojson_gares = file_get_contents($geojson_file_gares);
 
     if ($geojson_gares !== false) {
@@ -333,8 +332,8 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
 
             // Ajoutez les informations sur la gare au tableau
             $gares_proches[] = array(
-                'nom' => $feature['properties']['gare_alias_libelle_noncontraint'],
-                'departement' => $feature['properties']['departement_libellemin'],
+                'nom' => $feature['properties']['toponyme'],
+                'departement' => $feature['properties']['dep'],
                 'distance' => $distance_gare
             );
         }
@@ -344,8 +343,8 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
             return $a['distance'] - $b['distance'];
         });
 
-        // Affichez les deux gares les plus proches
-        echo '<h1>Les deux gares SNCF les plus proches :</h1>';
+        // Affichez les deux gares les plus proches en Occitanie
+        echo '<h1>Les deux gares SNCF les plus proches en Occitanie :</h1>';
         if (count($gares_proches) >= $nombre_de_gares) {
             echo '<table border=1>';
             echo '<tr><th>Nom de la gare</th><th>Département</th><th>Distance (mètres)</th></tr>';
@@ -358,10 +357,10 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
             }
             echo '</table>';
         } else {
-            echo 'Il n\'y a pas suffisamment de gares proches.';
+            echo 'Il n\'y a pas suffisamment de gares proches en Occitanie.';
         }
     } else {
-        echo 'Erreur lors de la lecture du fichier GeoJSON des gares SNCF.';
+        echo 'Erreur lors de la lecture du fichier GeoJSON des gares SNCF en Occitanie.';
     }
 } else {
     echo 'Les paramètres de latitude et de longitude sont manquants dans l\'URL.';

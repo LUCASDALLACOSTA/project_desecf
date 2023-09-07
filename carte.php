@@ -106,7 +106,6 @@
     </header>
     <!-- End Header -->
 
-
     <div id="map" style="height: 840px"></div>
 
     <?php
@@ -285,8 +284,9 @@
             // Création du contenu de la pop-up avec les informations des professionnels
             var popupContent = "<h3>Nom de la structure : </h3>" + nom_structure + "";
             popupContent += "<h3>Adresse : </h3>" + adresse + "";
-            popupContent += "<h3>Type de la structure : </h3>" + type_structure + "";
-            popupContent += "<h3><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h3>";
+            popupContent += "<h3>Type de la structure : </h3>" + type_structure + "<br>";
+            popupContent += "<h4><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h4>";
+            popupContent += "<h4><a href='itineraire.php?latitude_depart=" + latitude + "&longitude_depart=" + longitude + "'>Calculer l'itinéraire</a></h4><br>";
             popupContent += "<ul>";
 
             // Ajoutez les informations de chaque professionnel
