@@ -75,11 +75,16 @@
         }
 
         .footer-banner {
-            max-height: 100px; /* Hauteur maximale */
-            text-align: center; /* Centrer le texte */
-            width: 100%; /* Largeur de 100% pour s'adapter à la largeur de l'écran */
-            background-color: #f8f8f8; /* Couleur de fond */
-            padding: 10px 0; /* Espacement interne */
+            max-height: 100px;
+            /* Hauteur maximale */
+            text-align: center;
+            /* Centrer le texte */
+            width: 100%;
+            /* Largeur de 100% pour s'adapter à la largeur de l'écran */
+            background-color: #f8f8f8;
+            /* Couleur de fond */
+            padding: 10px 0;
+            /* Espacement interne */
         }
     </style>
 
@@ -231,7 +236,7 @@
             var type_structure = "<?php echo $professionnel['type_structure']; ?>";
             var nom_structure = "<?php echo $professionnel['nom_structure']; ?>";
             var id = "<?php echo $professionnel['id_professionnel']; ?>";
-            
+
 
             // Créez une clé unique pour chaque adresse
             var adresseKey = latitude + "_" + longitude + "_" + adresse;
@@ -244,7 +249,7 @@
                     longitude: longitude,
                     adresse: adresse,
                     nom_structure: nom_structure,
-                    type_structure:type_structure,
+                    type_structure: type_structure,
                     professionnels: [] // Un tableau pour stocker les professionnels ayant la même adresse
                 };
             }
@@ -266,85 +271,82 @@
                 id: id
             });
 
-        // Boucle pour créer les marqueurs et les pop-ups regroupées
-        for (var adresseKey in professionnelsParAdresse) {
-            var info = professionnelsParAdresse[adresseKey];
-            var latitude = info.latitude;
-            var longitude = info.longitude;
-            var adresse = info.adresse;
-            var type_structure = info.type_structure;
-            var professionnels = info.professionnels;
-            var nom_structure = info.nom_structure;
+            // Boucle pour créer les marqueurs et les pop-ups regroupées
+            for (var adresseKey in professionnelsParAdresse) {
+                var info = professionnelsParAdresse[adresseKey];
+                var latitude = info.latitude;
+                var longitude = info.longitude;
+                var adresse = info.adresse;
+                var type_structure = info.type_structure;
+                var professionnels = info.professionnels;
+                var nom_structure = info.nom_structure;
 
-            // Création du marqueur avec les coordonnées de l'adresse
-            var marker = L.marker([latitude, longitude]).addTo(map);
+                // Création du marqueur avec les coordonnées de l'adresse
+                var marker = L.marker([latitude, longitude]).addTo(map);
 
-            var listeArretsProches = "liste_arrets_proches.php?latitude=" + latitude + "&longitude=" + longitude;
+                var listeArretsProches = "liste_arrets_proches.php?latitude=" + latitude + "&longitude=" + longitude;
 
-            // Création du contenu de la pop-up avec les informations des professionnels
-            var popupContent = "<h3>Nom de la structure : </h3>" + nom_structure + "";
-            popupContent += "<h3>Adresse : </h3>" + adresse + "";
-            popupContent += "<h3>Type de la structure : </h3>" + type_structure + "<br>";
-            popupContent += "<h4><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h4>";
-            popupContent += "<h4><a href='itineraire.php?latitude_depart=" + latitude + "&longitude_depart=" + longitude + "'>Calculer l'itinéraire</a></h4><br>";
-            popupContent += "<ul>";
+                // Création du contenu de la pop-up avec les informations des professionnels
+                var popupContent = "<h3>Nom de la structure : </h3>" + nom_structure + "";
+                popupContent += "<h3>Adresse : </h3>" + adresse + "";
+                popupContent += "<h3>Type de la structure : </h3>" + type_structure + "<br>";
+                popupContent += "<h4><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h4>";
+                popupContent += "<h4><a href='itineraire.php?latitude_depart=" + latitude + "&longitude_depart=" + longitude + "'>Calculer l'itinéraire</a></h4><br>";
+                popupContent += "<ul>";
 
-            // Ajoutez les informations de chaque professionnel
-            for (var i = 0; i < professionnels.length; i++) {
-                var professionnel = professionnels[i];
-                var statut = professionnel.statut;
-                var statut_stage_2 = professionnel.statut_stage_2;
-                var dureeStage = professionnel.dureeStage;
-                var duree_stage_2 = professionnel.duree_stage_2;
-                var dateDebutStage = professionnel.dateDebutStage;
-                var date_debut_stage_2 = professionnel.date_debut_stage_2;
+                // Ajoutez les informations de chaque professionnel
+                for (var i = 0; i < professionnels.length; i++) {
+                    var professionnel = professionnels[i];
+                    var statut = professionnel.statut;
+                    var statut_stage_2 = professionnel.statut_stage_2;
+                    var dureeStage = professionnel.dureeStage;
+                    var duree_stage_2 = professionnel.duree_stage_2;
+                    var dateDebutStage = professionnel.dateDebutStage;
+                    var date_debut_stage_2 = professionnel.date_debut_stage_2;
 
-                popupContent += "<h3 style='text-align:center;'>Professionnel n° : " + (i + 1) + "</h3>";
-                popupContent += "<li><strong>Nom :</strong> " + professionnel.nom + "</li>";
-                popupContent += "<li><strong>Prénom :</strong> " + professionnel.prenom + "</li>";
-                popupContent += "<li><strong>Téléphone :</strong> " + professionnel.telephone + "</li>";
-                popupContent += "<li><strong>E-mail :</strong> " + professionnel.mail + "</li>";
-                popupContent += "<h4 style='text-align:center;'>Premier Stage</h4>";
-                popupContent += "<li><strong>Statut:</strong> " + statut + "</li>";
-                popupContent += "<li><strong>Durée de stage:</strong> " + dureeStage + "</li>";
-                popupContent += "<li><strong>Date de début du stage:</strong> " + dateDebutStage + "</li>";
-                popupContent += "<h4 style='text-align:center;'>Deuxième Stage</h4>";
-                popupContent += "<li><strong>Statut:</strong> " + statut_stage_2 + "</li>";
-                popupContent += "<li><strong>Durée de stage:</strong> " + duree_stage_2 + "</li>";
-                popupContent += "<li><strong>Date de début du stage:</strong> " + date_debut_stage_2 + "</li>";
-                popupContent += "<li><a href='modifier_professionnel.php?id=" + professionnel.id + "'>Modifier</a></li>";
+                    popupContent += "<h3 style='text-align:center;'>Professionnel n° : " + (i + 1) + "</h3>";
+                    popupContent += "<li><strong>Nom :</strong> " + professionnel.nom + "</li>";
+                    popupContent += "<li><strong>Prénom :</strong> " + professionnel.prenom + "</li>";
+                    popupContent += "<li><strong>Téléphone :</strong> " + professionnel.telephone + "</li>";
+                    popupContent += "<li><strong>E-mail :</strong> " + professionnel.mail + "</li>";
+                    popupContent += "<h4 style='text-align:center;'>Premier Stage</h4>";
+                    popupContent += "<li><strong>Statut:</strong> " + statut + "</li>";
+                    popupContent += "<li><strong>Durée de stage:</strong> " + dureeStage + "</li>";
+                    popupContent += "<li><strong>Date de début du stage:</strong> " + dateDebutStage + "</li>";
+                    popupContent += "<h4 style='text-align:center;'>Deuxième Stage</h4>";
+                    popupContent += "<li><strong>Statut:</strong> " + statut_stage_2 + "</li>";
+                    popupContent += "<li><strong>Durée de stage:</strong> " + duree_stage_2 + "</li>";
+                    popupContent += "<li><strong>Date de début du stage:</strong> " + date_debut_stage_2 + "</li>";
+                    popupContent += "<li><a href='modifier_professionnel.php?id=" + professionnel.id + "'>Modifier</a></li>";
 
-                // Ajoutez le marqueur à la couche correspondante en fonction du statut
-                if (statut === 'disponible' && statut_stage_2 === 'disponible') {
-                    marker.setIcon(disponibleIcon);
-                    marker.addTo(disponible);
-                } else if (statut === 'non disponible' && statut_stage_2 === 'non disponible') {
-                    marker.setIcon(nonDisponibleIcon);
-                    marker.addTo(nondisponible);
-                } else if (statut === 'non disponible' && statut_stage_2 === 'disponible')
-                {
-                    marker.setIcon(disponible2emeIcon);
-                    marker.addTo(dispo2eme);
-                } else if (statut === 'disponible' && statut_stage_2 === 'non disponible')
-                {
-                    marker.setIcon(disponible1erIcon);
-                    marker.addTo(dispo1er);
-                } else
-                {
-                    marker.setIcon(enAttenteIcon);
-                    marker.addTo(enattente);
+                    // Ajoutez le marqueur à la couche correspondante en fonction du statut
+                    if (statut === 'disponible' && statut_stage_2 === 'disponible') {
+                        marker.setIcon(disponibleIcon);
+                        marker.addTo(disponible);
+                    } else if (statut === 'non disponible' && statut_stage_2 === 'non disponible') {
+                        marker.setIcon(nonDisponibleIcon);
+                        marker.addTo(nondisponible);
+                    } else if (statut === 'non disponible' && statut_stage_2 === 'disponible') {
+                        marker.setIcon(disponible2emeIcon);
+                        marker.addTo(dispo2eme);
+                    } else if (statut === 'disponible' && statut_stage_2 === 'non disponible') {
+                        marker.setIcon(disponible1erIcon);
+                        marker.addTo(dispo1er);
+                    } else {
+                        marker.setIcon(enAttenteIcon);
+                        marker.addTo(enattente);
+                    }
                 }
+
+                popupContent += "</ul>";
+
+                // Ajout de la pop-up au marqueur
+                marker.bindPopup(popupContent);
+                // Ajout du marqueur à la couche "tous"
+                marker.addTo(tous);
             }
 
-            popupContent += "</ul>";
-
-            // Ajout de la pop-up au marqueur
-            marker.bindPopup(popupContent);
-            // Ajout du marqueur à la couche "tous"
-            marker.addTo(tous);
-        }
-
-        <?php }?>
+        <?php } ?>
 
         var overlayMaps = {
             "Tous": tous,
@@ -358,7 +360,7 @@
         var layerControl = L.control.layers(null, overlayMaps).addTo(map);
     </script>
 
-   <div class="footer-banner">
+    <div class="footer-banner">
         <h2 style="margin: 0;">PROJET DESECF</h2>
         <h3 style="text-align: center;">BLUZAT Clément - CLAVERIE Enzo - Lucas Dallas Costa</h3>
     </div>

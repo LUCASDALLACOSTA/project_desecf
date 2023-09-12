@@ -119,26 +119,21 @@
 
     <div id="map"></div>
 
+    <button id="locate-button">Obtenir ma position</button>
+
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.3.4/dist/leaflet-routing-machine.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
     <div id="debug"></div>
     <script>
-        var map = L.map('map').setView([
-            <?php echo isset($_GET['latitude_arrivee']) ? $_GET['latitude_arrivee'] : 0; ?>,
-            <?php echo isset($_GET['longitude_arrivee']) ? $_GET['longitude_arrivee'] : 0; ?>
-        ], 13);
+        var map = L.map('map').setView([0, 0], 13);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // Ajoutez le point d'arrivée (coordonnées de la popup)
-        var endPoint = L.latLng(
-            <?php echo isset($_GET['latitude_arrivee']) ? $_GET['latitude_arrivee'] : 0; ?>,
-            <?php echo isset($_GET['longitude_arrivee']) ? $_GET['longitude_arrivee'] : 0; ?>
-        );
+        var endPoint; // Point d'arrivée
 
         var redIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -148,42 +143,9 @@
             shadowSize: [41, 41]
         });
 
-        L.marker(endPoint, { icon: redIcon }).addTo(map);
-
-        // Ajoutez un contrôle de géocodage pour rechercher des adresses et obtenir des coordonnées de départ
-        var geocoder = L.Control.geocoder({
-            defaultMarkGeocode: false
-        })
-            .on('markgeocode', function (e) {
-                var latlng = e.geocode.center;
-                var startPoint = L.latLng(latlng.lat, latlng.lng);
-
-                // Supprimez le marqueur précédent (s'il existe)
-                if (map.hasLayer(startMarker)) {
-                    map.removeLayer(startMarker);
-                }
-
-                // Ajoutez le marqueur du point de départ
-                startMarker = L.marker(startPoint, { icon: greenIcon }).addTo(map);
-
-                // Calculez et affichez l'itinéraire
-                calculateRoute(startPoint, endPoint);
-
-                // Ajoutez un message de débogage pour vérifier si l'événement est déclenché
-                document.getElementById('debug').innerHTML = 'markgeocode event triggered';
-            })
-            .addTo(map);
-
         var startMarker; // Marqueur du point de départ
 
-        var greenIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-
+        // Fonction pour calculer et afficher l'itinéraire
         function calculateRoute(startPoint, endPoint) {
             // Créez un objet de contrôleur d'itinéraire
             L.Routing.control({
@@ -194,6 +156,42 @@
                 routeWhileDragging: true // Permet de recalculer l'itinéraire en déplaçant le point de destination
             }).addTo(map);
         }
+
+        // Fonction pour obtenir la géolocalisation
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    var startPoint = L.latLng(latitude, longitude);
+
+                    // Supprimez le marqueur précédent (s'il existe)
+                    if (map.hasLayer(startMarker)) {
+                        map.removeLayer(startMarker);
+                    }
+
+                    // Ajoutez le marqueur du point de départ avec l'icône verte
+                    startMarker = L.marker(startPoint, { icon: greenIcon }).addTo(map);
+
+                    // Calculez et affichez l'itinéraire
+                    calculateRoute(startPoint, endPoint);
+                });
+            } else {
+                alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+            }
+        }
+
+        // Ajoutez un bouton ou une interface utilisateur pour déclencher la géolocalisation
+        document.getElementById('locate-button').addEventListener('click', getLocation);
+
+        // Initialisez le point d'arrivée avec les coordonnées de l'URL
+        endPoint = L.latLng(
+            <?php echo isset($_GET['latitude_arrivee']) ? $_GET['latitude_arrivee'] : 0; ?>,
+            <?php echo isset($_GET['longitude_arrivee']) ? $_GET['longitude_arrivee'] : 0; ?>
+        );
+
+        // Initialisez l'itinéraire avec les coordonnées du point d'arrivée
+        calculateRoute(endPoint, endPoint); // Vous pouvez utiliser le point d'arrivée comme point de départ temporaire
     </script>
 </body>
 

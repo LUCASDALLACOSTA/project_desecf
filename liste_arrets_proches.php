@@ -105,6 +105,10 @@
     .error-message {
         color: red;
     }
+    .scrollable-content {
+    max-height: 900px;
+    overflow-y: auto;
+}
 
 </style>
 
@@ -124,6 +128,7 @@
     </header>
 </head>
 
+<div class="scrollable-content">
 <?php
 // Chemin vers le fichier GeoJSON
 $geojson_file = 'includes/transport/stations_de_metro.geojson';
@@ -247,7 +252,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
         $arrets_proches_bus = array();
 
         // Distance maximale (en mètres) pour considérer un arrêt comme proche
-        $distance_max_bus = 300;
+        $distance_max_bus = 1000;
 
         // Parcourez les arrêts de bus et vérifiez si ils sont à moins de 300 mètres
         foreach ($data_bus['features'] as $feature) {
@@ -273,7 +278,7 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
         });
 
         // Affichez les arrêts de bus proches sous forme de tableau
-        echo '<h1>Arrêts de bus Tisséo à moins de 300 mètres du POI :</h1>';
+        echo '<h1>Arrêts de bus Tisséo à moins de 1km du POI :</h1>';
         if (!empty($arrets_proches_bus)) {
             echo '<table border="1">';
             echo '<tr><th>Nom de l\'arrêt</th><th>Lignes de bus</th><th>Distance (mètres)</th></tr>';
@@ -445,4 +450,6 @@ if (isset($_GET['latitude']) && isset($_GET['longitude'])) {
     echo 'Les paramètres de latitude et de longitude sont manquants dans l\'URL.';
 }
 ?>
+</div>
+
     

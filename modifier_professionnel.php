@@ -153,27 +153,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $duree_stage_2 = mysqli_real_escape_string($conn, $_POST["duree_stage_2"]);
     $date_debut_stage_2 = mysqli_real_escape_string($conn, $_POST["date_debut_stage_2"]);
 
-// Mise à jour des informations du professionnel dans la base de données
-$sql = "UPDATE professionnel 
-        SET 
-            nom='$nom', 
-            prenom='$prenom', 
-            adresse='$adresse', 
-            telephone='$telephone', 
-            mail='$mail', 
-            statut='$statut', 
-            duree_stage='$duree_stage', 
-            date_debut_stage='$date_debut_stage', 
-            nom_structure='$nom_structure', 
-            type_structure='$type_structure',
-            statut_stage_2='$statut_stage_2', 
-            duree_stage_2='$duree_stage_2', 
-            date_debut_stage_2='$date_debut_stage_2'
-        WHERE 
-            id_professionnel=$professionnel_id";
-
-
-    // Géocodage de l'adresse pour obtenir les coordonnées de latitude et longitude
     $addressEncoded = urlencode($adresse);
     $geocodeUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" . $addressEncoded;
     $opts = [
@@ -203,9 +182,12 @@ $sql = "UPDATE professionnel
             type_structure='$type_structure',
             statut_stage_2='$statut_stage_2', 
             duree_stage_2='$duree_stage_2', 
-            date_debut_stage_2='$date_debut_stage_2'
+            date_debut_stage_2='$date_debut_stage_2',
+            latitude='$latitude', 
+            longitude='$longitude'
         WHERE 
             id_professionnel=$professionnel_id";
+
 
         if ($conn->query($sql) === TRUE) {
             $updateSuccess = true;
