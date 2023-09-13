@@ -93,6 +93,8 @@
     <!-- Make sure you put this AFTER Leaflet's CSS -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin="">
     </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 </head>
 
 <body>
@@ -100,7 +102,7 @@
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
-            <img src="assets/img/portfolio/logo.png" alt="Logo" class="logo">
+            <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
                 <li><a href="./"></span>&nbsp;Accueil</a></li>
                 <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
@@ -318,6 +320,7 @@
                     popupContent += "<li><strong>Durée de stage:</strong> " + duree_stage_2 + "</li>";
                     popupContent += "<li><strong>Date de début du stage:</strong> " + date_debut_stage_2 + "</li>";
                     popupContent += "<li><a href='modifier_professionnel.php?id=" + professionnel.id + "'>Modifier</a></li>";
+                    popupContent += "<button onclick='supprimerProfessionnel(" + professionnel.id + ")'>Supprimer</button>";
 
                     // Ajoutez le marqueur à la couche correspondante en fonction du statut
                     if (statut === 'disponible' && statut_stage_2 === 'disponible') {
@@ -344,6 +347,31 @@
                 marker.bindPopup(popupContent);
                 // Ajout du marqueur à la couche "tous"
                 marker.addTo(tous);
+
+                function supprimerProfessionnel(professionnelId) {
+                    if (confirm("Êtes-vous sûr de vouloir supprimer ce professionnel ?")) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "supprimer_professionnel.php", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200) {
+                                    var response = JSON.parse(xhr.responseText);
+                                    if (response.success) {
+                                        alert("Le professionnel a été supprimé avec succès.");
+                                        header("Location: carte.php");
+                                    } else {
+                                        alert("La suppression du professionnel a échoué.");
+                                    }
+                                } else {
+                                    alert("Erreur lors de la suppression du professionnel.");
+                                }
+                            }
+                        };
+                        xhr.send("id_professionnel=" + professionnelId);
+                    }
+                }
+
             }
 
         <?php } ?>

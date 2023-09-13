@@ -105,7 +105,7 @@
 <body>
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
-            <img src="assets/img/portfolio/logo.png" alt="Logo" class="logo">
+            <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
                 <li><a href="./"></span>&nbsp;Accueil</a></li>
                 <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
@@ -133,6 +133,61 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        var control = L.Routing.control({
+        routeWhileDragging: true,
+        geocoder: L.Control.Geocoder.nominatim(),
+        routeDragTimeout: 100,
+        showAlternatives: true,
+        altLineOptions: {
+            styles: [{
+                    color: 'black',
+                    opacity: 0.15,
+                    weight: 9
+                },
+                {
+                    color: 'white',
+                    opacity: 0.8,
+                    weight: 6
+                },
+                {
+                    color: 'blue',
+                    opacity: 0.5,
+                    weight: 2
+                }
+            ]
+        },
+
+        waypointNameFallback: function(latLng) {
+            function zeroPad(n) {
+                n = Math.round(n);
+                return n < 10 ? '0' + n : n;
+            }
+
+            function sexagesimal(p, pos, neg) {
+                var n = Math.abs(p),
+                    degs = Math.floor(n),
+                    mins = (n - degs) * 60,
+                    secs = (mins - Math.floor(mins)) * 60,
+                    frac = Math.round((secs - Math.floor(secs)) * 100);
+                return (n >= 0 ? pos : neg) + degs + '°' +
+                    zeroPad(mins) + ''' +
+                    zeroPad(secs) + '.' + zeroPad(frac) + '"';
+            }
+
+            return sexagesimal(latLng.lat, 'N', 'S') + ' ' + sexagesimal(latLng.lng, 'E', 'W');
+        },
+        createMarker: function(i, waypoint) {
+
+            return L.marker(waypoint.latLng, {
+                draggable: true,
+                icon: L.icon.glyph({
+                    glyph: String.fromCharCode(65 + i)
+
+                })
+
+            })
+        }
+    }).addTo(map);
         var endPoint; // Point d'arrivée
 
         var redIcon = new L.Icon({
