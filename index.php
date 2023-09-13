@@ -104,7 +104,7 @@ h2 {
 <!-- End Header -->
 
 <h1>PROJET DESECF</h1>
-<h2>BLUZAT Clément - CLAVERIE Enzo - Lucas Dallas Costa</h2>
+<h2>BLUZAT Clément - CLAVERIE Enzo - DALLA COSTA Lucas</h2>
 </body>
 
 </html>

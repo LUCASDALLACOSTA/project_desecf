@@ -293,7 +293,7 @@
                 popupContent += "<h3>Adresse : </h3>" + adresse + "";
                 popupContent += "<h3>Type de la structure : </h3>" + type_structure + "<br>";
                 popupContent += "<h4><a href='" + listeArretsProches + "'>Voir les arrêts à proximité</a></h4>";
-                popupContent += "<h4><a href='itineraire.php?latitude_depart=" + latitude + "&longitude_depart=" + longitude + "'>Calculer l'itinéraire</a></h4><br>";
+                popupContent += "<h4><a href='itineraire.php?latitude_arrivee=" + latitude + "&longitude_arrivee=" + longitude + "'>Afficher l'itinéraire</a></h4><br>";
                 popupContent += "<ul>";
 
                 // Ajoutez les informations de chaque professionnel
@@ -390,7 +390,7 @@
 
     <div class="footer-banner">
         <h2 style="margin: 0;">PROJET DESECF</h2>
-        <h3 style="text-align: center;">BLUZAT Clément - CLAVERIE Enzo - Lucas Dallas Costa</h3>
+        <h3 style="text-align: center;">BLUZAT Clément - CLAVERIE Enzo - DALLA COSTA Lucas</h3>
     </div>
 </body>
 
