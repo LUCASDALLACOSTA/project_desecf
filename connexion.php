@@ -84,23 +84,55 @@ if (isset($_GET['error']) && !empty($_GET['error']) && !isset($_SESSION['Type_us
         background-color: #f8f8f8;
     }
 
+    form {
+        margin: 20px auto;
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="submit"] {
+        background-color: #333;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #ffd700;
+    }
+
     .logo {
         width: 50px;
         height: auto;
         margin-right: 10px;
     }
 
-    .footer-banner {
-        max-height: 100px;
-        /* Hauteur maximale */
-        text-align: center;
-        /* Centrer le texte */
-        width: 100%;
-        /* Largeur de 100% pour s'adapter à la largeur de l'écran */
-        background-color: #f8f8f8;
-        /* Couleur de fond */
-        padding: 10px 0;
-        /* Espacement interne */
+    .success-message {
+        color: green;
+    }
+
+    .error-message {
+        color: red;
+    }
+
+    .scrollable-content {
+        max-height: 900px;
+        overflow-y: auto;
     }
 </style>
 
@@ -111,6 +143,39 @@ if (isset($_GET['error']) && !empty($_GET['error']) && !isset($_SESSION['Type_us
     <title>Connexion - PROJET DECESF</title>
     <meta content="PROJET DECESF" name="description">
 
+    <?php
+    session_start();
+
+    if (isset($_POST['submit'])) {
+        $mailconnect = htmlspecialchars($_POST["username"]);
+        $mdpconnect = htmlspecialchars($_POST["password"]);
+
+        if (!empty($mailconnect) and !empty($mdpconnect)) {
+            $req_verif_existe_user = $dbh->prepare("SELECT * FROM user WHERE username = ?");
+            $req_verif_existe_user->execute(array($mailconnect));
+            $resultat_user = $req_verif_existe_user->fetch();
+            $resultat_verif_existe_user = $req_verif_existe_user->rowCount();
+
+            if ($resultat_verif_existe_user > 0) {
+                $isPasswordCorrect = password_verify($mdpconnect, $resultat_user['password']);
+
+                if ($isPasswordCorrect == 1) {
+                    $_SESSION['id'] = $resultat_user['id'];
+                    $_SESSION['username'] = $resultat_user['username'];
+                    $_SESSION['message_bienvenue'] = "Bonjour, " . $_SESSION['username'] . " !";
+                    header('Location: index.php');
+                } else {
+                    $erreur = "Nom d'utilisateur ou mot de passe incorrect";
+                }
+            }
+        }
+    }
+
+    if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
+        $message_bienvenue = "Bonjour, " . $_SESSION['username'] . " !";
+    }
+
+    ?>
 </head>
 
 <body>
@@ -118,10 +183,42 @@ if (isset($_GET['error']) && !empty($_GET['error']) && !isset($_SESSION['Type_us
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <li><a href="./"></span>&nbsp;Accueil</a></li>
-                <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
-                <li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
-                <li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>
+                <ul>
+                    <?php
+                    echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+                    if (isset($_SESSION['connected']) === true) {
+                        echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                        echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                        echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                    }
+                    ?>
+                </ul>
             </ul>
         </div>
+    </header>
+    <div class="container">
+        <h2>Connexion</h2>
+        <?php
+        if (isset($erreur)) {
+            echo '<div class="alert alert-danger">' . $erreur . '</div>';
+        }
+        ?>
+
+        <form method="POST" action="connexion.php" style="background-color: white;">
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" name="submit">Se connecter</button>
+        </form>
+    </div>
+</body>
 </body>

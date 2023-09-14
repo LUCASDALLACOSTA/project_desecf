@@ -90,12 +90,12 @@
     input[type="submit"]:hover {
         background-color: #ffd700;
     }
-    
+
     .logo {
-            width: 50px;
-            height: auto;
-            margin-right: 10px;
-        }
+        width: 50px;
+        height: auto;
+        margin-right: 10px;
+    }
 
     .success-message {
         color: green;
@@ -106,9 +106,9 @@
     }
 
     .scrollable-content {
-    max-height: 900px;
-    overflow-y: auto;
-}
+        max-height: 900px;
+        overflow-y: auto;
+    }
 </style>
 
 <?php
@@ -209,82 +209,90 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <li><a href="./">&nbsp;Accueil</a></li>
-                <li><a href="connexion.php">&nbsp;Connexion</a></li>
-                <li><a href="carte.php">&nbsp;Carte</a></li>
-                <li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
+                <ul>
+                    <?php
+                    echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+                    if (isset($_SESSION['connected']) === true) {
+                        echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                        echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                        echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                    }
+                    ?>
+                </ul>
             </ul>
         </div>
     </header>
 </head>
 
 <body>
-<div class="scrollable-content">
-    <h1>Formulaire de modification du professionnel</h1>
-    
-    <!-- Affichez le message de succès ou d'erreur ici -->
-    <?php if ($updateSuccess): ?>
-        <div style="text-align:center;" class="success-message">
-            Mise à jour réussie.
-        </div>
-    <?php endif; ?>
-    
-    <form method="POST" action="">
+    <div class="scrollable-content">
+        <h1>Formulaire de modification du professionnel</h1>
 
-    <label for="nom_structure">Nom de la structure :</label>
-    <input type="text" name="nom_structure" value="<?php echo $professionnel['nom_structure']; ?>" required><br>
+        <!-- Affichez le message de succès ou d'erreur ici -->
+        <?php if ($updateSuccess) : ?>
+            <div style="text-align:center;" class="success-message">
+                Mise à jour réussie.
+            </div>
+        <?php endif; ?>
 
-    <label for="type_structure">Type de structure :</label>
-    <input type="text" name="type_structure" value="<?php echo $professionnel['type_structure']; ?>"><br>
+        <form method="POST" action="">
 
-    <label for="nom">Nom :</label>
-    <input type="text" name="nom" value="<?php echo $professionnel['nom']; ?>" required><br>
+            <label for="nom_structure">Nom de la structure :</label>
+            <input type="text" name="nom_structure" value="<?php echo $professionnel['nom_structure']; ?>" required><br>
 
-    <label for="prenom">Prénom :</label>
-    <input type="text" name="prenom" value="<?php echo $professionnel['prenom']; ?>" required><br>
+            <label for="type_structure">Type de structure :</label>
+            <input type="text" name="type_structure" value="<?php echo $professionnel['type_structure']; ?>"><br>
 
-    <label for="adresse">Adresse :</label>
-    <input type="text" name="adresse" value="<?php echo $professionnel['adresse']; ?>" required><br>
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" value="<?php echo $professionnel['nom']; ?>" required><br>
 
-    <label for="telephone">Téléphone :</label>
-    <input type="text" name="telephone" value="<?php echo $professionnel['telephone']; ?>" required><br>
+            <label for="prenom">Prénom :</label>
+            <input type="text" name="prenom" value="<?php echo $professionnel['prenom']; ?>" required><br>
 
-    <label for="mail">Mail :</label>
-    <input type="email" name="mail" value="<?php echo $professionnel['mail']; ?>" required><br>
+            <label for="adresse">Adresse :</label>
+            <input type="text" name="adresse" value="<?php echo $professionnel['adresse']; ?>" required><br>
 
-    <h2 style="text-align:center;"> Premier stage: </h2>
+            <label for="telephone">Téléphone :</label>
+            <input type="text" name="telephone" value="<?php echo $professionnel['telephone']; ?>" required><br>
 
-    <label for="statut">Statut:</label>
-    <select name="statut" required>
-        <option value="disponible" <?php if ($professionnel['statut'] == "disponible") echo "selected"; ?>>Disponible</option>
-        <option value="non disponible" <?php if ($professionnel['statut'] == "non disponible") echo "selected"; ?>>Non disponible</option>
-        <option value="en attente" <?php if ($professionnel['statut'] == "en attente") echo "selected"; ?>>En attente</option>
-    </select><br>
+            <label for="mail">Mail :</label>
+            <input type="email" name="mail" value="<?php echo $professionnel['mail']; ?>" required><br>
 
-    <label for="duree_stage">Durée du stage:</label>
-    <input type="text" name="duree_stage" value="<?php echo $professionnel['duree_stage']; ?>" required><br>
+            <h2 style="text-align:center;"> Premier stage: </h2>
 
-    <label for="date_debut_stage">Date de début du stage:</label>
-    <input type="date" name="date_debut_stage" value="<?php echo $professionnel['date_debut_stage']; ?>" required><br>
+            <label for="statut">Statut:</label>
+            <select name="statut" required>
+                <option value="disponible" <?php if ($professionnel['statut'] == "disponible") echo "selected"; ?>>Disponible</option>
+                <option value="non disponible" <?php if ($professionnel['statut'] == "non disponible") echo "selected"; ?>>Non disponible</option>
+                <option value="en attente" <?php if ($professionnel['statut'] == "en attente") echo "selected"; ?>>En attente</option>
+            </select><br>
 
-    <h2 style="text-align:center;"> Deuxième stage: </h2>
+            <label for="duree_stage">Durée du stage:</label>
+            <input type="text" name="duree_stage" value="<?php echo $professionnel['duree_stage']; ?>" required><br>
 
-    <label for="statut_stage_2">Statut:</label>
-    <select name="statut_stage_2" required>
-        <option value="disponible" <?php if ($professionnel['statut_stage_2'] == "disponible") echo "selected"; ?>>Disponible</option>
-        <option value="non disponible" <?php if ($professionnel['statut_stage_2'] == "non disponible") echo "selected"; ?>>Non disponible</option>
-        <option value="en attente" <?php if ($professionnel['statut_stage_2'] == "en attente") echo "selected"; ?>>En attente</option>
-    </select><br>
+            <label for="date_debut_stage">Date de début du stage:</label>
+            <input type="date" name="date_debut_stage" value="<?php echo $professionnel['date_debut_stage']; ?>" required><br>
 
-    <label for="duree_stage_2">Durée du stage:</label>
-    <input type="text" name="duree_stage_2" value="<?php echo $professionnel['duree_stage_2']; ?>"><br>
+            <h2 style="text-align:center;"> Deuxième stage: </h2>
 
-    <label for="date_debut_stage_2">Date de début du stage:</label>
-    <input type="date" name="date_debut_stage_2" value="<?php echo $professionnel['date_debut_stage_2']; ?>"><br>
+            <label for="statut_stage_2">Statut:</label>
+            <select name="statut_stage_2" required>
+                <option value="disponible" <?php if ($professionnel['statut_stage_2'] == "disponible") echo "selected"; ?>>Disponible</option>
+                <option value="non disponible" <?php if ($professionnel['statut_stage_2'] == "non disponible") echo "selected"; ?>>Non disponible</option>
+                <option value="en attente" <?php if ($professionnel['statut_stage_2'] == "en attente") echo "selected"; ?>>En attente</option>
+            </select><br>
 
-    <input type="submit" value="Enregistrer">
-</form>
-</div>
+            <label for="duree_stage_2">Durée du stage:</label>
+            <input type="text" name="duree_stage_2" value="<?php echo $professionnel['duree_stage_2']; ?>"><br>
+
+            <label for="date_debut_stage_2">Date de début du stage:</label>
+            <input type="date" name="date_debut_stage_2" value="<?php echo $professionnel['date_debut_stage_2']; ?>"><br>
+
+            <input type="submit" value="Enregistrer">
+        </form>
+    </div>
 </body>
 
 </html>

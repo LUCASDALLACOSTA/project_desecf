@@ -90,12 +90,12 @@
     input[type="submit"]:hover {
         background-color: #ffd700;
     }
-    
+
     .logo {
-            width: 50px;
-            height: auto;
-            margin-right: 10px;
-        }
+        width: 50px;
+        height: auto;
+        margin-right: 10px;
+    }
 
     .success-message {
         color: green;
@@ -106,10 +106,9 @@
     }
 
     .scrollable-content {
-    max-height: 900px;
-    overflow-y: auto;
-}
-
+        max-height: 900px;
+        overflow-y: auto;
+    }
 </style>
 
 <?php
@@ -180,6 +179,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Ajouter un professionnel</title>
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -187,25 +187,34 @@ $conn->close();
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <li><a href="./">&nbsp;Accueil</a></li>
-                <li><a href="connexion.php">&nbsp;Connexion</a></li>
-                <li><a href="carte.php">&nbsp;Carte</a></li>
-                <li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
+                <ul>
+                    <?php
+                    echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+                    if (isset($_SESSION['connected']) === true) {
+                        echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                        echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                        echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                    }
+                    ?>
+                </ul>
             </ul>
         </div>
     </header>
 </head>
+
 <body>
-<div class="scrollable-content">
-    <h1>Ajouter un professionnel</h1>
+    <div class="scrollable-content">
+        <h1>Ajouter un professionnel</h1>
 
-    <?php if ($ajoutSuccess): ?>
-        <div style="text-align:center;" class="success-message">
-           Ajout d'un professionnel réussi
-        </div>
-    <?php endif; ?>
+        <?php if ($ajoutSuccess) : ?>
+            <div style="text-align:center;" class="success-message">
+                Ajout d'un professionnel réussi
+            </div>
+        <?php endif; ?>
 
-    <form method="POST" action="">
+        <form method="POST" action="">
             <label for="nom_structure">Nom de la structure :</label>
             <input type="text" name="nom_structure" required><br>
 
@@ -261,4 +270,5 @@ $conn->close();
         </form>
     </div>
 </body>
+
 </html>

@@ -104,10 +104,18 @@
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <li><a href="./"></span>&nbsp;Accueil</a></li>
-                <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
-                <li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
-                <li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>
+                <ul>
+                    <?php
+                    echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+                    if (isset($_SESSION['connected']) === true) {
+                        echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                        echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                        echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                    }
+                    ?>
+                </ul>
             </ul>
         </div>
     </header>
@@ -118,6 +126,14 @@
     <?php
 
     include 'includes/connexion_bdd.php'; // Connexion à la base de données
+
+    session_start();
+
+    if (!isset($_SESSION['connected']) || $_SESSION['connected'] !== true) {
+        $_SESSION['message'] = "Vous ne pouvez pas accéder à cette page sans être connecté.";
+        header("Location: index.php");
+        exit();
+    }
 
     // Requête SQL pour sélectionner toutes les entrées de la table "professionnel"
     $sql = "SELECT * FROM professionnel";

@@ -116,6 +116,7 @@
                 <li><a href="./"></span>&nbsp;Accueil</a></li>
                 <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
                 <li><a href="carte.php">&nbsp;Carte</a></li>
+                <li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>
             </ul>
         </div>
     </header>

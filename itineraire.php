@@ -94,10 +94,18 @@ $longitudeArrivee = isset($_GET['longitude_arrivee']) ? floatval($_GET['longitud
     <div class="container d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Logo" class="logo">
         <ul>
-            <li><a href="./"></span>&nbsp;Accueil</a></li>
-            <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
-            <li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>
-            <li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>
+            <ul>
+                <?php
+                echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+                if (isset($_SESSION['connected']) === true) {
+                    echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                    echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                    echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                    echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                }
+                ?>
+            </ul>
         </ul>
     </div>
 </header>
@@ -176,7 +184,7 @@ $longitudeArrivee = isset($_GET['longitude_arrivee']) ? floatval($_GET['longitud
         markerArrivee.bindPopup('<b>Point d\'arrivée</b>').openPopup();
 
         var iti = null;
-        
+
         function calculerItineraire() {
             // Supprimez l'itinéraire précédent s'il existe
             if (iti !== null) {
@@ -201,7 +209,7 @@ $longitudeArrivee = isset($_GET['longitude_arrivee']) ? floatval($_GET['longitud
                 // Écoutez l'événement 'routeselected' pour obtenir l'itinéraire
                 control.on('routeselected', function(e) {
                     iti = e.route; // Stocke l'itinéraire
-                    L.geoJSON(iti).addTo(map); // Affiche l'itinéraire en bleu
+                    L.geoJSON(iti).addTo(map); // Affiche l'itinéraire
                 });
             } else {
                 console.error('Marker de départ ou point d\'arrivée non défini.');
