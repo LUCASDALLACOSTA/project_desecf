@@ -99,27 +99,22 @@
 
 <body>
 
-    <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <ul>
-                    <?php
-                    echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
-                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
-                    if (isset($_SESSION['connected']) === true) {
-                        echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
-                        echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
-                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
-                        echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
-                    }
-                    ?>
-                </ul>
+                <?php
+                session_start();
+                echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                if (isset($_SESSION['connected']) && $_SESSION['connected'] === true) {
+                    echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                    echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                    echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                }
+                ?>
             </ul>
         </div>
     </header>
-    <!-- End Header -->
 
     <div id="map" style="height: 840px"></div>
 
@@ -127,9 +122,7 @@
 
     include 'includes/connexion_bdd.php'; // Connexion à la base de données
 
-    session_start();
-
-    if (!isset($_SESSION['connected']) || $_SESSION['connected'] !== true) {
+    if (!isset($_SESSION['connected']) && $_SESSION['connected'] !== true) {
         $_SESSION['message'] = "Vous ne pouvez pas accéder à cette page sans être connecté.";
         header("Location: index.php");
         exit();

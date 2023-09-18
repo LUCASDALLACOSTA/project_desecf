@@ -100,8 +100,10 @@
       <ul>
         <?php
         echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
-        echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
-        if (isset($_SESSION['connected']) === true) {
+        if (!isset($_SESSION['connected']) || $_SESSION['connected'] !== true) {
+          echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+        }
+        if (isset($_SESSION['connected']) && $_SESSION['connected'] === true) {
           echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
           echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
           echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
@@ -109,6 +111,7 @@
         }
         ?>
       </ul>
+
     </div>
   </header>
 
@@ -121,9 +124,6 @@
     }
     if (!empty($message_deconnexion)) {
       echo '<div class="alert alert-info">' . $message_deconnexion . '</div>';
-    }
-    if (isset($_SESSION['message'])) {
-      echo '<div class="alert alert-warning" style="color: red;">' . $_SESSION['message'] . '</div>';
     }
     ?>
   </h1>

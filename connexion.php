@@ -144,57 +144,81 @@ if (isset($_GET['error']) && !empty($_GET['error']) && !isset($_SESSION['Type_us
     <meta content="PROJET DECESF" name="description">
 
     <?php
-    session_start();
+    include 'includes/connexion_bdd.php'; // Connexion à la base de données
+    session_start(); // Démarrage de la session
 
-    if (isset($_POST['submit'])) {
-        $mailconnect = htmlspecialchars($_POST["username"]);
-        $mdpconnect = htmlspecialchars($_POST["password"]);
-
-        if (!empty($mailconnect) and !empty($mdpconnect)) {
-            $req_verif_existe_user = $dbh->prepare("SELECT * FROM user WHERE username = ?");
-            $req_verif_existe_user->execute(array($mailconnect));
-            $resultat_user = $req_verif_existe_user->fetch();
-            $resultat_verif_existe_user = $req_verif_existe_user->rowCount();
-
-            if ($resultat_verif_existe_user > 0) {
-                $isPasswordCorrect = password_verify($mdpconnect, $resultat_user['password']);
-
-                if ($isPasswordCorrect == 1) {
-                    $_SESSION['id'] = $resultat_user['id'];
-                    $_SESSION['username'] = $resultat_user['username'];
-                    $_SESSION['message_bienvenue'] = "Bonjour, " . $_SESSION['username'] . " !";
-                    header('Location: index.php');
-                } else {
-                    $erreur = "Nom d'utilisateur ou mot de passe incorrect";
-                }
-            }
+    if (isset($_GET['disconnect']) && !isset($_SESSION['Type_user'])) {
+        $message_warning = "Vous avez été déconnecté !";
+    }
+    if (isset($_GET['information']) && !isset($_SESSION['Type_user'])) {
+        $message_information = "Votre code confidentiel a bien été changé !";
+    }
+    if (isset($_GET['error']) && !isset($_SESSION['Type_user'])) {
+        if ($_GET['error'] == 1) {
+            $message_error = "Vous devez être connecté pour accéder à cette page !";
+        } else {
+            $message_error = "Vous n'avez pas accès à cette page !";
         }
     }
 
-    if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
-        $message_bienvenue = "Bonjour, " . $_SESSION['username'] . " !";
-    }
-
+    // Vérifiez si l'utilisateur est connecté
+    $connected = isset($_SESSION['connected']) && $_SESSION['connected'] === true;
     ?>
-</head>
+
+    <!DOCTYPE html>
+    <html lang="fr">
+
+    <head>
+        <!-- Mettez ici vos balises meta, titre, etc. -->
+
+        <?php
+        if (isset($_POST['submit'])) {
+            $mailconnect = htmlspecialchars($_POST["username"]);
+            $mdpconnect = htmlspecialchars($_POST["password"]);
+
+            if (!empty($mailconnect) && !empty($mdpconnect)) {
+                $req_verif_existe_user = $dbh->prepare("SELECT * FROM user WHERE username = ?");
+                $req_verif_existe_user->execute(array($mailconnect));
+                $resultat_user = $req_verif_existe_user->fetch();
+                $resultat_verif_existe_user = $req_verif_existe_user->rowCount();
+
+                if ($resultat_verif_existe_user > 0) {
+                    $isPasswordCorrect = password_verify($mdpconnect, $resultat_user['password']);
+
+                    if ($isPasswordCorrect == 1) {
+                        $_SESSION['id'] = $resultat_user['id'];
+                        $_SESSION['username'] = $resultat_user['username'];
+                        $_SESSION['message_bienvenue'] = "Bonjour, " . $_SESSION['username'] . " !";
+                        $_SESSION['connected'] = true; // Définissez la session comme connectée
+                        header('Location: index.php');
+                    } else {
+                        $erreur = "Nom d'utilisateur ou mot de passe incorrect";
+                    }
+                }
+            }
+        }
+
+        if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
+            $message_bienvenue = "Bonjour, " . $_SESSION['username'] . " !";
+        }
+        ?>
+    </head>
 
 <body>
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <ul>
-                    <?php
-                    echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
-                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
-                    if (isset($_SESSION['connected']) === true) {
-                        echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
-                        echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
-                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
-                        echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
-                    }
-                    ?>
-                </ul>
+                <?php
+                echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
+                if ($connected) { // Affiche les liens si l'utilisateur est connecté
+                    echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                    echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
+                    echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                    echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                }
+                ?>
             </ul>
         </div>
     </header>
@@ -221,4 +245,5 @@ if (isset($_GET['error']) && !empty($_GET['error']) && !isset($_SESSION['Type_us
         </form>
     </div>
 </body>
-</body>
+
+</html>

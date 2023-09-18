@@ -95,7 +95,6 @@
     form input[type="submit"]:hover {
         background-color: #0056b3;
     }
-    
 </style>
 
 <head>
@@ -108,34 +107,47 @@
 </head>
 
 <body>
+    <?php
+    session_start();
+    if (!isset($_SESSION['connected']) && $_SESSION['connected'] !== true) {
+        $_SESSION['message'] = "Vous ne pouvez pas accéder à cette page sans être connecté.";
+        header("Location: index.php");
+        exit();
+    }
+
+    ?>
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
             <img src="assets/img/logo.png" alt="Logo" class="logo">
             <ul>
-                <li><a href="./"></span>&nbsp;Accueil</a></li>
-                <li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>
-                <li><a href="carte.php">&nbsp;Carte</a></li>
-                <li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>
+                <?php
+                echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
+                if (isset($_SESSION['connected']) && $_SESSION['connected'] === true) {
+                    echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
+                    echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
+                    echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
+                }
+                ?>
             </ul>
         </div>
     </header>
     <!-- End Header -->
     <h1>Ajouter des données via CSV</h2>
         <h2>
-        <?php
-        // Récupérer le message depuis l'URL
-        if (isset($_GET['message'])) {
-            $message = $_GET['message'];
-            if (!empty($message)) {
-                // Déterminer la classe CSS en fonction de $insertResult
-                $messageClass = isset($insertResult) && $insertResult ? 'success-message' : 'error-message';
-                
-                // Afficher le message avec la classe CSS appropriée
-                echo '<div class="' . $messageClass . '">' . htmlspecialchars($message) . '</div>';
+            <?php
+            // Récupérer le message depuis l'URL
+            if (isset($_GET['message'])) {
+                $message = $_GET['message'];
+                if (!empty($message)) {
+                    // Déterminer la classe CSS en fonction de $insertResult
+                    $messageClass = isset($insertResult) && $insertResult ? 'success-message' : 'error-message';
+
+                    // Afficher le message avec la classe CSS appropriée
+                    echo '<div class="' . $messageClass . '">' . htmlspecialchars($message) . '</div>';
+                }
             }
-        }
-        ?>
+            ?>
             <form action="traitement_csv.php" method="post" enctype="multipart/form-data">
                 <input type="file" name="csv_file" required>
                 <input type="submit" value="Importer">

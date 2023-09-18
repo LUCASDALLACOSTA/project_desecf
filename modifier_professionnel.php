@@ -112,6 +112,7 @@
 </style>
 
 <?php
+session_start();
 // Connexion à la base de données
 $servername = "localhost";
 $username = "root";
@@ -197,7 +198,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+if (!isset($_SESSION['connected']) && $_SESSION['connected'] !== true) {
+    $_SESSION['message'] = "Vous ne pouvez pas accéder à cette page sans être connecté.";
+    header("Location: index.php");
+    exit();
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -212,8 +221,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <ul>
                     <?php
                     echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
-                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
-                    if (isset($_SESSION['connected']) === true) {
+                    if (isset($_SESSION['connected']) && $_SESSION['connected'] === true) {
                         echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
                         echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
                         echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';

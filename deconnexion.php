@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Détruire la session actuelle
 session_destroy();
 
 $message_deconnexion = "Vous êtes déconnecté.";

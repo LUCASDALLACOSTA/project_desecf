@@ -181,6 +181,15 @@ $conn->close();
 <html>
 
 <head>
+
+    <?php
+    session_start();
+    if (!isset($_SESSION['connected']) && $_SESSION['connected'] !== true) {
+        $_SESSION['message'] = "Vous ne pouvez pas accéder à cette page sans être connecté.";
+        header("Location: index.php");
+        exit();
+    }
+    ?>
     <title>Ajouter un professionnel</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <header id="header" class="fixed-top ">
@@ -190,11 +199,9 @@ $conn->close();
                 <ul>
                     <?php
                     echo '<li><a href="./"></span>&nbsp;Accueil</a></li>';
-                    echo '<li><a href="connexion.php"><span></span>&nbsp;Connexion</a></li>';
-                    if (isset($_SESSION['connected']) === true) {
+                    if (isset($_SESSION['connected']) && $_SESSION['connected'] === true) {
                         echo '<li><a href="carte.php">&nbsp;Carte</a></li>';
                         echo '<li><a href="ajout_csv.php">&nbsp;Ajout via csv</a></li>';
-                        echo '<li><a href="ajout_professionnel.php">&nbsp;Ajouter un professionnel</a></li>';
                         echo '<li><a href="deconnexion.php">&nbsp;Déconnexion</a></li>';
                     }
                     ?>
